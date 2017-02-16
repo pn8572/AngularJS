@@ -1,81 +1,121 @@
 'use strict';
-
-/**
- * Module dependencies.
- */
-
-//============================SQL========================================
 var sql = require('mssql');
+var dbconfig = require('./server/config/database');
 
-/*var connection = sql.createConnection({
-  host     : 'GBTedPPcl1SQL1\Common',
-  user     : 'ra.p.pillai',
-  password : 'Teddington18th',
-  database : 'FRSTestWebPortal'
-});
+var conn = new sql.Request(dbconfig.connection);
 
-connection.connect();*/
+//var filesSort = require('./fileUtility');
 
-//sql.connect("mssql://svc_sql_frstestwebportal:RsSGvNRZFtbG1DIrxP12@FRSTestWebPortal");
- 
-//sql.connect("mssql://ra.p.pillai:Teddington18th@GBTedPPcl1SQL1:1433/FRSTestWebPortal").then(function() {
-	sql.connect("mssql://svc_frstestwebportal:U6o5tMrwZSTJKxuhjReuW2bEI09uII@GBTedPPcl1SQL1:1433/FRSTestWebPortal").then(function() {
-    // Query 
-    
-    new sql.Request().query('select * from mytable').then(function(recordset) {
-        console.dir(recordset);
-    }).catch(function(err) {
-    	console.log(err);
+var logUserActivity = require('./server/model/logUserActivity');
+
+var dbConfig = {
+  server: 'GBTedPPcl1SQL1\\Common',
+  database: 'FRSTestWebPortal',
+  user: 'svc_frstestwebportal', // 'CORP\\svc_sql_frstestwebportal', 'svc_frstestwebportal'
+  password: 'U6o5tMrwZSTJKxuhjReuW2bEI09uII',  // ca2A79e213ff67f85C5f9beffd3ad5  U6o5tMrwZSTJKxuhjReuW2bEI09uII
+  port: 1433,
+  options: {trustedConnection: true, useUTC: true}
+};
+
+var dbConfig = {
+  server: 'GBTedPPcl1SQL1\\Common',
+  database: 'FRSTestWebPortal',
+  user: 'svc_frstestwebportal', // 'CORP\\svc_sql_frstestwebportal', 'svc_frstestwebportal'
+  password: 'U6o5tMrwZSTJKxuhjReuW2bEI09uII',  // ca2A79e213ff67f85C5f9beffd3ad5  U6o5tMrwZSTJKxuhjReuW2bEI09uII
+  port: 1433,
+  options: {trustedConnection: true, useUTC: true}
+};
+
+function getUser() {
+  var conn = new sql.Connection(dbconfig.connection);
+  conn.connect().then(function () {
+    var req = new sql.Request(conn);
+    req.query("SELECT * FROM REPORT_CATEGORIES").then(function (recordset) {
+      console.log(recordset);
+      console.log('This is now successful');
+    })
+    .catch(function (err) {
+      console.log(err);
     });
- 
-    // Stored Procedure 
-    
-    new sql.Request()
-    .input('input_parameter', sql.Int, value)
-    .output('output_parameter', sql.VarChar(50))
-    .execute('procedure_name').then(function(recordsets) {
-        console.dir(recordsets);
-    }).catch(function(err) {
-        // ... execute error checks
-        console.log(err);
-    });
-    
-    // ES6 Tagged template literals (experimental) 
-    
-    sql.query`SELECT * from USER where userid = ${'101'}`.then(function(recordset) {
-        console.dir(recordset);
-    }).catch(function(err) {
-        // ... query error checks
-        console.log(err);
-    });
-}).catch(function(err) {
-    // ... connect error checks
+  })
+  .catch(function (err) {
     console.log(err);
-});
+  });
+}
+
+logUserActivity.logUserActivity(200,'2016-02-09 16:50:00.000','23.54.222.33','Admin','Account Rejected','A new user account [XYZ] has been rejected');
+logUserActivity.updatePasswordRetry(38,5);
+
+//filesSort.fileResult;
+
+//uncomment to test delete user
+//deleteResult.deleteUser(103);
+//getUser();
 
 
+// STAGING ===========================================
 
-//============================LDAP========================================
-// var ldap = require('./server/config/database.js');
+// Import Database SQL
+/*var sql = require('mssql');
 
-// Add User
-/*ldap.addUser('15', 'David', 'Banner', 'passwordDavid1').then(function () {
-  console.log('Successful addition');
-}, function () {
-  console.log('error can\'t add user');
-});
-*/
+var dbConfig = {
+  server: 'GBTedPPcl1SQL1\\Common',
+  database: 'FRSStagingWebPortal',
+  user: 'svc_frsstagingwebportal', // 'CORP\\svc_sql_frstestwebportal', 'svc_frstestwebportal'
+  password: '9myHa5y6lJ3OuB4PtiiM0QgxIhcDdh',  // ca2A79e213ff67f85C5f9beffd3ad5  U6o5tMrwZSTJKxuhjReuW2bEI09uII
+  options: {trustedConnection: true, useUTC: true}
+};
 
-// Authenticate
-/*ldap.authenticate('jason', '1234567!QWERabc').then(function () {
-  console.log('Successful Authentication');
-}, function () {
-  console.log('error');
-});
-*/
-// Authenticate
-/*ldap.find('ou=MPS,ou=_Staff-Users', function(err, res) {
-  console.log('Successful Search');
-}, function () {
-  console.log('error');
-});*/
+function getUser() {
+  var conn = new sql.Connection(dbConfig);
+  conn.connect().then(function () {
+    var req = new sql.Request(conn);
+    req.query("SELECT * FROM USERS").then(function (recordset) {
+      console.log(recordset);
+      console.log('This is now successful');
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+}
+getUser();*/
+
+//uncomment to test delete user
+//deleteResult.deleteUser(103);
+//getUser();
+
+
+// STAGING ===========================================
+
+// Import Database SQL
+/*var sql = require('mssql');
+
+var dbConfig = {
+  server: 'GBTedPPcl1SQL1\\Common',
+  database: 'FRSStagingWebPortal',
+  user: 'svc_frsstagingwebportal', // 'CORP\\svc_sql_frstestwebportal', 'svc_frstestwebportal'
+  password: '9myHa5y6lJ3OuB4PtiiM0QgxIhcDdh',  // ca2A79e213ff67f85C5f9beffd3ad5  U6o5tMrwZSTJKxuhjReuW2bEI09uII
+  options: {trustedConnection: true, useUTC: true}
+};
+
+function getUser() {
+  var conn = new sql.Connection(dbConfig);
+  conn.connect().then(function () {
+    var req = new sql.Request(conn);
+    req.query("SELECT * FROM USERS").then(function (recordset) {
+      console.log(recordset);
+      console.log('This is now successful');
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+}
+getUser();*/
